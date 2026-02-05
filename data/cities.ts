@@ -1,5 +1,6 @@
 // Major world cities for autocomplete (includes landmark cities + additional major cities)
 // Updated to use Array.from for TypeScript compatibility
+// Trigger Vercel deployment
 import { landmarks } from './landmarks';
 
 const landmarkCities = Array.from(new Set(landmarks.map(l => l.city)));
