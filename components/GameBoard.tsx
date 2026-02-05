@@ -279,9 +279,9 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
           )}
         </div>
 
-        {!gameState.gameComplete && roundToShow === 'landmark' && (
+        {roundToShow === 'landmark' && !(gameState.gameComplete && viewIndex === 2) && (
           <>
-            {(!gameState.landmarkGuessed && gameState.landmarkGuesses < 5 && !gameState.landmarkRevealed) ? (
+            {(!gameState.landmarkGuessed && gameState.landmarkGuesses < 5 && !gameState.landmarkRevealed && !gameState.gameComplete) ? (
               <LandmarkNameQuestion
                 landmark={landmark}
                 onGuess={handleLandmarkGuess}
@@ -339,10 +339,9 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
                 })}
               </div>
             )}
-            {roundToShow === 'landmark' &&
-              (gameState.landmarkGuessed ||
-                gameState.landmarkGuesses >= 5 ||
-                gameState.landmarkRevealed) && (
+            {(gameState.landmarkGuessed ||
+              gameState.landmarkGuesses >= 5 ||
+              gameState.landmarkRevealed) && (
               <div className={styles.nextRoundContainer}>
                 {gameState.gameComplete && viewIndex < 2 && (
                   <button
