@@ -339,18 +339,29 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
                 })}
               </div>
             )}
-            {gameState.currentRound === 'landmark' &&
+            {roundToShow === 'landmark' &&
               (gameState.landmarkGuessed ||
                 gameState.landmarkGuesses >= 5 ||
                 gameState.landmarkRevealed) && (
               <div className={styles.nextRoundContainer}>
-                <button
-                  type="button"
-                  className={styles.nextRoundButton}
-                  onClick={handleGoToCountryRound}
-                >
-                  Next round
-                </button>
+                {gameState.gameComplete && viewIndex < 2 && (
+                  <button
+                    type="button"
+                    className={styles.nextRoundButton}
+                    onClick={handleNextRoundClick}
+                  >
+                    Next round →
+                  </button>
+                )}
+                {!gameState.gameComplete && (
+                  <button
+                    type="button"
+                    className={styles.nextRoundButton}
+                    onClick={handleGoToCountryRound}
+                  >
+                    Next round
+                  </button>
+                )}
               </div>
             )}
           </>
@@ -408,6 +419,29 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
 
         {gameState.guesses.length > 0 && roundToShow === 'country' && (
           <GuessHistory guesses={gameState.guesses} correctCountry={landmark.country} />
+        )}
+
+        {roundToShow === 'country' && !(gameState.gameComplete && viewIndex === 2) && (
+          <div className={styles.nextRoundContainer}>
+            {viewIndex > 0 && (
+              <button
+                type="button"
+                className={styles.nextRoundButton}
+                onClick={handleViewLastRoundClick}
+              >
+                ← View last round
+              </button>
+            )}
+            {(gameState.gameComplete || countryFinished || backSteps > 0) && (
+              <button
+                type="button"
+                className={styles.nextRoundButton}
+                onClick={handleNextRoundClick}
+              >
+                Next round →
+              </button>
+            )}
+          </div>
         )}
 
         {roundToShow === 'city' && !(gameState.gameComplete && viewIndex === 2) && (
