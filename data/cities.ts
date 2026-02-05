@@ -1,7 +1,7 @@
 // Major world cities for autocomplete (includes landmark cities + additional major cities)
 import { landmarks } from './landmarks';
 
-const landmarkCities = [...new Set(landmarks.map(l => l.city))];
+const landmarkCities = Array.from(new Set(landmarks.map(l => l.city)));
 
 const majorCities = [
   'Amsterdam', 'Athens', 'Auckland', 'Bangkok', 'Berlin', 'Boston', 'Brussels',
@@ -24,4 +24,4 @@ const majorCities = [
   'Tijuana', 'Toulouse', 'Valencia', 'Venice', 'Vienna', 'Winnipeg',
 ];
 
-export const cities = [...new Set([...landmarkCities, ...majorCities])].sort((a, b) => a.localeCompare(b));
+export const cities = Array.from(new Set([...landmarkCities, ...majorCities])).sort((a, b) => a.localeCompare(b));
