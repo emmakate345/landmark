@@ -199,8 +199,9 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
   };
 
   const handleViewLastRoundClick = () => {
-    if (currentIndex <= 0) return;
-    setBackSteps(prev => Math.min(currentIndex, prev + 1));
+    const maxSteps = gameState.gameComplete ? 2 : currentIndex;
+    if (maxSteps <= 0) return;
+    setBackSteps(prev => Math.min(maxSteps, prev + 1));
   };
 
   const handleNextRoundClick = () => {
@@ -355,7 +356,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
           </>
         )}
 
-        {!gameState.gameComplete && roundToShow === 'country' && (
+        {roundToShow === 'country' && !(gameState.gameComplete && viewIndex === 2) && (
           <>
             {!gameState.countryGuessed &&
             !gameState.countryRevealed &&
@@ -409,7 +410,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
           <GuessHistory guesses={gameState.guesses} correctCountry={landmark.country} />
         )}
 
-        {!gameState.gameComplete && roundToShow === 'city' && (
+        {roundToShow === 'city' && !(gameState.gameComplete && viewIndex === 2) && (
           <>
             <CityQuestion
               landmark={landmark}
@@ -475,7 +476,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
         )}
 
 
-        {gameState.gameComplete && (
+        {gameState.gameComplete && viewIndex === 2 && (
           <div className={styles.completionMessage}>
             <h2 className={styles.completionTitle}>Game complete.</h2>
             <p className={styles.completionText}>
@@ -503,6 +504,26 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
               </button>
               {shareCopied && (
                 <div className={styles.shareCopied}>Copied to clipboard – paste into a text to share.</div>
+              )}
+            </div>
+            <div className={styles.nextRoundContainer}>
+              {viewIndex > 0 && (
+                <button
+                  type="button"
+                  className={styles.nextRoundButton}
+                  onClick={handleViewLastRoundClick}
+                >
+                  ← View last round
+                </button>
+              )}
+              {backSteps > 0 && (
+                <button
+                  type="button"
+                  className={styles.nextRoundButton}
+                  onClick={handleNextRoundClick}
+                >
+                  Next round →
+                </button>
               )}
             </div>
           </div>
