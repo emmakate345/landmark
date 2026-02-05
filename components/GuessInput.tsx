@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import { normalizeForMatch } from '@/lib/stringUtils';
 import styles from './GuessInput.module.css';
 
 interface GuessInputProps {
@@ -12,6 +13,8 @@ interface GuessInputProps {
   suggestions?: string[];
   onReveal?: () => void;
   buttonSuffix?: string;
+  /** When true, filter/sort suggestions using accent-insensitive matching (e.g. "sao" matches "São Paulo") */
+  accentInsensitive?: boolean;
 }
 
 export default function GuessInput({ 
@@ -23,18 +26,20 @@ export default function GuessInput({
   suggestions = [],
   onReveal,
   buttonSuffix,
+  accentInsensitive = false,
 }: GuessInputProps) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const search = value.trim().toLowerCase();
+  const norm = accentInsensitive ? (s: string) => normalizeForMatch(s) : (s: string) => s.trim().toLowerCase();
   const filteredSuggestions = (search
     ? suggestions
-        .filter(s => s.toLowerCase().includes(search))
+        .filter(s => norm(s).includes(norm(search)))
         .sort((a, b) => {
-          const aStarts = a.toLowerCase().startsWith(search);
-          const bStarts = b.toLowerCase().startsWith(search);
+          const aStarts = norm(a).startsWith(norm(search));
+          const bStarts = norm(b).startsWith(norm(search));
           if (aStarts && !bStarts) return -1;
           if (!aStarts && bStarts) return 1;
           return a.localeCompare(b);

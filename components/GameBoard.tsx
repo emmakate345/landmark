@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Landmark, GameState } from '@/types/landmark';
 import { countries } from '@/data/countries';
+import { normalizeForMatch } from '@/lib/stringUtils';
 import LandmarkDisplay from './LandmarkDisplay';
 import GuessInput from './GuessInput';
 import LandmarkNameQuestion from './LandmarkNameQuestion';
@@ -14,9 +15,19 @@ interface GameBoardProps {
   landmark: Landmark;
   gameState: GameState;
   setGameState: (state: GameState | ((prev: GameState) => GameState)) => void;
+  onPlayPastPuzzle?: () => void;
+  onBackToToday?: () => void;
+  isPastPuzzle?: boolean;
 }
 
-export default function GameBoard({ landmark, gameState, setGameState }: GameBoardProps) {
+export default function GameBoard({
+  landmark,
+  gameState,
+  setGameState,
+  onPlayPastPuzzle,
+  onBackToToday,
+  isPastPuzzle = false,
+}: GameBoardProps) {
   const [countryInput, setCountryInput] = useState('');
   const [shareCopied, setShareCopied] = useState(false);
   const [shareMethod, setShareMethod] = useState<'native' | 'clipboard' | null>(null);
@@ -32,6 +43,13 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
   useEffect(() => {
     setViewIndex(prev => Math.min(prev, currentIndex));
   }, [currentIndex]);
+
+  // When loading a completed game (refresh or back to today), show completion screen
+  useEffect(() => {
+    if (gameState.gameComplete) {
+      setViewIndex(2);
+    }
+  }, [gameState.gameComplete]);
 
   const countryFinished =
     gameState.countryGuessed ||
@@ -149,9 +167,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
   };
 
   const handleCityGuess = (cityGuess: string) => {
-    const normalize = (s: string) =>
-      s.trim().toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
-    const isCorrect = normalize(cityGuess) === normalize(landmark.city);
+    const isCorrect = normalizeForMatch(cityGuess) === normalizeForMatch(landmark.city);
     
     setGameState(prev => {
       if (prev.gameComplete || prev.currentRound !== 'city') return prev;
@@ -247,6 +263,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
       year: 'numeric',
       month: 'short',
       day: 'numeric',
+      timeZone: 'America/New_York',
     });
 
     const shareUrl = 'https://landmarkgame.vercel.app/';
@@ -583,7 +600,15 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
                 </div>
               )}
             </div>
-            <div className={styles.nextRoundContainer}>
+          </div>
+        )}
+
+        {gameState.gameComplete && effectiveViewIndex === 2 && (
+          <div className={styles.completionFooter}>
+            <p className={styles.completionFooterText}>
+              {isPastPuzzle ? 'Play another past puzzle or return to today.' : 'Come back tomorrow for a new landmark!'}
+            </p>
+            <div className={styles.completionFooterButtons}>
               {effectiveViewIndex > 0 && (
                 <button
                   type="button"
@@ -593,16 +618,28 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
                   ← View last round
                 </button>
               )}
-              {backSteps > 0 && (
+              {onPlayPastPuzzle && (
                 <button
                   type="button"
                   className={styles.nextRoundButton}
-                  onClick={handleNextRoundClick}
+                  onClick={onPlayPastPuzzle}
                 >
-                  Next round →
+                  Play past puzzles
                 </button>
               )}
             </div>
+          </div>
+        )}
+
+        {isPastPuzzle && onBackToToday && (
+          <div className={styles.backToTodayFooter}>
+            <button
+              type="button"
+              className={styles.backToTodayButton}
+              onClick={onBackToToday}
+            >
+              ← Back to today
+            </button>
           </div>
         )}
       </div>

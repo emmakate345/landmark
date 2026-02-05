@@ -1,4 +1,5 @@
 import { Landmark } from '@/types/landmark';
+import { getTodayDateStrEastern, getYesterdayDateStrEastern } from '@/lib/dateUtils';
 
 // 50 man-made landmarks only - images from Unsplash (verified photo IDs)
 export const landmarks: Landmark[] = [
@@ -75,13 +76,58 @@ function seededShuffle<T>(array: T[], seed: number): T[] {
   return arr;
 }
 
-// Get landmark for a specific day (seeded shuffle - same for everyone, randomized order)
-export function getDailyLandmark(): Landmark {
-  const today = new Date();
-  const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+// Parse YYYY-MM-DD to a Date for calendar arithmetic (no timezone - just Y/M/D)
+function parseDateStr(dateStr: string): Date {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function getDateStrFromParsed(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+// Get landmark for a specific date string YYYY-MM-DD (seeded shuffle - same for everyone)
+export function getLandmarkForDateStr(dateStr: string): Landmark {
   const seed = dateStr.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
   const shuffled = seededShuffle(landmarks, seed);
   return shuffled[0];
+}
+
+// Get landmark for today (Eastern time)
+export function getDailyLandmark(): Landmark {
+  return getLandmarkForDateStr(getTodayDateStrEastern());
+}
+
+// Game #1 was Feb 4, 2025 - the archive grows from here
+const LAUNCH_DATE_STR = '2025-02-04';
+
+// Get all available past puzzle landmark IDs (archive: launch through yesterday, NEVER today)
+// All dates in Eastern time
+export function getAvailablePastPuzzleIds(): string[] {
+  const todayStr = getTodayDateStrEastern();
+  const yesterdayStr = getYesterdayDateStrEastern();
+
+  if (yesterdayStr < LAUNCH_DATE_STR) return [];
+
+  const ids: string[] = [];
+  let currentStr = LAUNCH_DATE_STR;
+  while (currentStr <= yesterdayStr && currentStr < todayStr) {
+    ids.push(getLandmarkForDateStr(currentStr).id);
+    const next = parseDateStr(currentStr);
+    next.setDate(next.getDate() + 1);
+    currentStr = getDateStrFromParsed(next);
+  }
+  return ids;
+}
+
+// Get a random past puzzle not in the excluded set. Returns null if all have been played.
+export function getRandomPastLandmark(excludeIds: Set<string> = new Set()): Landmark | null {
+  const available = getAvailablePastPuzzleIds();
+  const unplayed = available.filter(id => !excludeIds.has(id));
+  if (unplayed.length === 0) return null;
+
+  const randomId = unplayed[Math.floor(Math.random() * unplayed.length)];
+  return landmarks.find(l => l.id === randomId) ?? null;
 }
 
 // Additional landmark names used only for autocomplete decoys in Round 1.

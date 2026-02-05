@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Landmark } from '@/types/landmark';
 import { cities } from '@/data/cities';
+import { normalizeForMatch } from '@/lib/stringUtils';
 import GuessInput from './GuessInput';
 import styles from './CityQuestion.module.css';
 
@@ -56,11 +57,12 @@ export default function CityQuestion({
           suggestions={cities}
           onReveal={onReveal}
           buttonSuffix={suffix}
+          accentInsensitive
         />
         {lastGuess && (
           <p className={styles.landmarkFeedback}>
             <span>
-              {lastGuess.trim().toLowerCase() === landmark.city.trim().toLowerCase() ? '✓' : '✗'}
+              {normalizeForMatch(lastGuess) === normalizeForMatch(landmark.city) ? '✓' : '✗'}
             </span>{' '}
             You guessed <strong>{lastGuess}</strong>. This was guess{' '}
             <strong>{guessesUsed}</strong> of <strong>{maxGuesses}</strong>.

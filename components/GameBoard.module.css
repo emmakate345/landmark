@@ -1,7 +1,7 @@
 .gameBoard {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 3px;
 }
 
 .landmarkSection {
@@ -25,38 +25,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15px 25px;
+  padding: 12px 20px;
   background: #e8f5f0;
   border-radius: 10px;
-  min-width: 120px;
+  min-width: 100px;
 }
 
 .statLabel {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #666;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .statValue {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #c62828;
 }
 
 .statValueSmall {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #c62828;
 }
 
 .statValueSuccess {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #2e7d32;
 }
 
 .hintDisplay {
-  padding: 15px;
+  padding: 12px;
   background: #fff3e0;
   border: 2px solid #e07a5f;
   border-radius: 10px;
@@ -64,33 +64,33 @@
 }
 
 .hintText {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: #bf5a3c;
 }
 
 .completionMessage {
-  padding: 30px;
+  padding: 24px;
   background: #e8f5f0;
   border-radius: 15px;
   text-align: center;
 }
 
 .completionTitle {
-  font-size: 2rem;
-  margin-bottom: 15px;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
   color: #2d6a5a;
 }
 
 .completionText {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+  font-size: 1rem;
+  margin-bottom: 12px;
   line-height: 1.6;
   color: #2d6a5a;
 }
 
 .completionRounds {
-  font-size: 1rem;
-  margin-bottom: 15px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
   color: #2d6a5a;
 }
 
@@ -99,12 +99,62 @@
 }
 
 .completionStats {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #2d6a5a;
+}
+
+.completionFooter {
+  padding: 16px 20px;
+  background: #e8f5f0;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.completionFooterText {
+  font-size: 0.9rem;
+  color: #2d6a5a;
+  margin-bottom: 12px;
+}
+
+.completionFooterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.completionFooterButtons .nextRoundButton {
+  padding: 8px 16px;
+  font-size: 0.8rem;
+}
+
+.backToTodayFooter {
+  margin-top: 16px;
+  padding-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.backToTodayButton {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2d6a5a;
+  background: #e8f5f0;
+  border: 2px solid #7eb8a3;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.backToTodayButton:hover {
+  background: #d4ede5;
+  border-color: #6ba3b8;
 }
 
 .shareActions {
   margin-top: 16px;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,8 +162,8 @@
 }
 
 .shareButton {
-  padding: 10px 22px;
-  font-size: 0.95rem;
+  padding: 12px 24px;
+  font-size: 1rem;
   font-weight: 600;
   border-radius: 999px;
   border: none;
@@ -130,12 +180,12 @@
 }
 
 .shareCopied {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #2d6a5a;
 }
 
 .landmarkResult {
-  padding: 16px 20px;
+  padding: 14px 18px;
   margin-top: 4px;
   background: #e8f5f0;
   border-radius: 10px;
@@ -143,14 +193,14 @@
 }
 
 .landmarkResultTitle {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #2d6a5a;
   margin-bottom: 4px;
 }
 
 .landmarkResultName {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #2d6a5a;
 }
 
@@ -168,15 +218,15 @@
 }
 
 .countryTitle {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
+  font-size: 1.25rem;
+  margin-bottom: 12px;
   font-weight: 700;
   text-align: center;
 }
 
 .countryText {
-  font-size: 1.1rem;
-  margin-bottom: 20px;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
   line-height: 1.6;
   opacity: 0.95;
   text-align: center;
@@ -193,7 +243,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .landmarkGuessIconIncorrect {
@@ -211,8 +261,8 @@
 }
 
 .nextRoundButton {
-  padding: 12px 28px;
-  font-size: 1.05rem;
+  padding: 10px 22px;
+  font-size: 0.9rem;
   font-weight: 600;
   border-radius: 999px;
   border: none;
@@ -229,26 +279,6 @@
   background: linear-gradient(135deg, #8fc9b5 0%, #7bb5c9 100%);
 }
 
-.landmarkResult {
-  padding: 16px 20px;
-  margin-top: 4px;
-  background: #e8f5f0;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.landmarkResultTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2d6a5a;
-  margin-bottom: 4px;
-}
-
-.landmarkResultName {
-  font-size: 1.2rem;
-  color: #2d6a5a;
-}
-
 @media (max-width: 768px) {
   .countryCard {
     padding: 25px 28px 40px 28px;
@@ -263,10 +293,10 @@
   }
 
   .completionTitle {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .completionText {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 }
