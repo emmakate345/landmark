@@ -136,22 +136,24 @@ export default function GuessInput({
           </ul>
         )}
       </div>
-      <button
-        onClick={handleSubmit}
-        disabled={disabled || !value.trim()}
-        className={styles.button}
-      >
-        Guess{buttonSuffix ? ` (${buttonSuffix})` : ''}
-      </button>
-      {onReveal && (
+      <div className={styles.buttonRow}>
         <button
-          type="button"
-          onClick={onReveal}
-          className={styles.revealButton}
+          onClick={handleSubmit}
+          disabled={disabled || !value.trim()}
+          className={styles.button}
         >
-          Reveal
+          Guess{buttonSuffix ? ` (${buttonSuffix})` : ''}
         </button>
-      )}
+        {onReveal && (
+          <button
+            type="button"
+            onClick={onReveal}
+            className={styles.revealButton}
+          >
+            Reveal
+          </button>
+        )}
+      </div>
     </div>
   );
 }

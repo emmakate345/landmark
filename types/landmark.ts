@@ -18,6 +18,7 @@ export interface GameState {
   // City round
   cityGuess: string | null;
   cityGuessed: boolean;
+  cityRevealed?: boolean;
   gameComplete: boolean;
   // Three‑round flow
   currentRound: 'landmark' | 'country' | 'city';

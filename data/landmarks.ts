@@ -54,13 +54,34 @@ export const landmarks: Landmark[] = [
   { id: '50', name: 'Easter Island Moai', country: 'Chile', city: 'Easter Island', continent: 'Oceania', imageUrl: 'https://images.unsplash.com/photo-1671155281264-5f5a211ebd90?q=80&w=1752&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
 ];
 
-// Get landmark for a specific day (based on date)
+// Seeded PRNG (Mulberry32) - same seed = same sequence for everyone each day
+function mulberry32(seed: number): () => number {
+  return () => {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Fisher-Yates shuffle with seeded random
+function seededShuffle<T>(array: T[], seed: number): T[] {
+  const arr = [...array];
+  const random = mulberry32(seed);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Get landmark for a specific day (seeded shuffle - same for everyone, randomized order)
 export function getDailyLandmark(): Landmark {
   const today = new Date();
-  const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
-  const index = dayOfYear % landmarks.length;
-  const indextest = 50;
-  return landmarks[index];
+  const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const seed = dateStr.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const shuffled = seededShuffle(landmarks, seed);
+  return shuffled[0];
 }
 
 // Additional landmark names used only for autocomplete decoys in Round 1.

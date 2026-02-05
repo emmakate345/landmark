@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Landmark, GameState } from '@/types/landmark';
 import { countries } from '@/data/countries';
 import LandmarkDisplay from './LandmarkDisplay';
@@ -19,12 +19,19 @@ interface GameBoardProps {
 export default function GameBoard({ landmark, gameState, setGameState }: GameBoardProps) {
   const [countryInput, setCountryInput] = useState('');
   const [shareCopied, setShareCopied] = useState(false);
-  const [backSteps, setBackSteps] = useState(0);
+  const [shareMethod, setShareMethod] = useState<'native' | 'clipboard' | null>(null);
+  const [viewIndex, setViewIndex] = useState(0);
 
   const roundOrder: Array<'landmark' | 'country' | 'city'> = ['landmark', 'country', 'city'];
   const currentIndex = roundOrder.indexOf(gameState.currentRound);
-  const viewIndex = Math.max(0, currentIndex - backSteps);
-  const roundToShow: 'landmark' | 'country' | 'city' = roundOrder[viewIndex];
+  const effectiveViewIndex = Math.min(viewIndex, currentIndex);
+  const roundToShow: 'landmark' | 'country' | 'city' = roundOrder[effectiveViewIndex];
+  const backSteps = currentIndex - effectiveViewIndex;
+
+  // Sync viewIndex when advancing to a new round (e.g. game completes)
+  useEffect(() => {
+    setViewIndex(prev => Math.min(prev, currentIndex));
+  }, [currentIndex]);
 
   const countryFinished =
     gameState.countryGuessed ||
@@ -74,7 +81,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
   };
 
   const handleGoToCountryRound = () => {
-    setBackSteps(0);
+    setViewIndex(1);
     setGameState(prev => {
       if (
         prev.gameComplete ||
@@ -124,7 +131,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
   };
 
   const handleGoToCityRound = () => {
-    setBackSteps(0);
+    setViewIndex(2);
     setGameState(prev => {
       const maxAttemptsReached = prev.guesses.length >= 5;
       const countryFinishedState =
@@ -193,21 +200,20 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
         ...prev,
         cityGuess: null,
         cityGuessed: false,
+        cityRevealed: true,
         gameComplete: true,
       };
     });
   };
 
   const handleViewLastRoundClick = () => {
-    const maxSteps = gameState.gameComplete ? 2 : currentIndex;
-    if (maxSteps <= 0) return;
-    setBackSteps(prev => Math.min(maxSteps, prev + 1));
+    setViewIndex(prev => Math.max(0, prev - 1));
   };
 
   const handleNextRoundClick = () => {
-    // If we are currently viewing a previous round, step forward in history.
-    if (backSteps > 0) {
-      setBackSteps(prev => Math.max(0, prev - 1));
+    // If we are currently viewing a previous round, step forward one round at a time.
+    if (effectiveViewIndex < currentIndex) {
+      setViewIndex(prev => Math.min(currentIndex, prev + 1));
       return;
     }
 
@@ -218,6 +224,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
   };
 
   const handleShareResults = async () => {
+    setShareMethod(null);
     const maxPerRound = 5;
     const landmarkLine = `Landmark: ${
       gameState.landmarkGuessed ? gameState.landmarkGuesses : 'X'
@@ -242,6 +249,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
       day: 'numeric',
     });
 
+    const shareUrl = 'https://landmarkgame.vercel.app/';
     const shareText = [
       `landmark puzzle #${landmark.id} – ${dateStr}`,
       '',
@@ -250,16 +258,35 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
       cityLine,
       '',
       `Total guesses: ${totalGuesses}`,
+      '',
+      shareUrl,
     ].join('\n');
 
     try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(shareText);
+      // Use native share sheet when available (iOS, Android) – shows Messages, WhatsApp, etc.
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        await navigator.share({
+          title: `landmark puzzle #${landmark.id}`,
+          text: shareText,
+          url: shareUrl, // Enables link preview in Messages, WhatsApp, etc.
+        });
+        setShareMethod('native');
         setShareCopied(true);
-        setTimeout(() => setShareCopied(false), 2000);
+        setTimeout(() => {
+          setShareCopied(false);
+          setShareMethod(null);
+        }, 2000);
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareText);
+        setShareMethod('clipboard');
+        setShareCopied(true);
+        setTimeout(() => {
+          setShareCopied(false);
+          setShareMethod(null);
+        }, 2000);
       }
     } catch {
-      // ignore clipboard errors
+      // User cancelled share or clipboard failed – ignore
     }
   };
 
@@ -271,15 +298,33 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
 
       <div className={styles.gameInfo}>
         <div className={styles.stats}>
-          {gameState.countryGuessed && (
-            <div className={styles.stat}>
+          {effectiveViewIndex >= 1 && (gameState.landmarkGuessed || gameState.landmarkRevealed || gameState.landmarkGuesses >= 5) && (
+            <div className={`${styles.stat}${!gameState.landmarkGuessed ? ` ${styles.statNotFound}` : ''}`}>
               <span className={styles.statLabel}>Status:</span>
-              <span className={styles.statValueSuccess}>✓ Country Found!</span>
+              <span className={gameState.landmarkGuessed ? styles.statValueSuccess : styles.statValueSmall}>
+                {gameState.landmarkGuessed ? '✓ Landmark found' : '✗ Landmark not found'}
+              </span>
+            </div>
+          )}
+          {effectiveViewIndex >= 2 && (gameState.countryGuessed || gameState.countryRevealed || gameState.guesses.length >= 5) && (
+            <div className={`${styles.stat}${!gameState.countryGuessed ? ` ${styles.statNotFound}` : ''}`}>
+              <span className={styles.statLabel}>Status:</span>
+              <span className={gameState.countryGuessed ? styles.statValueSuccess : styles.statValueSmall}>
+                {gameState.countryGuessed ? '✓ Country found' : '✗ Country not found'}
+              </span>
+            </div>
+          )}
+          {effectiveViewIndex >= 2 && (gameState.cityGuessed || gameState.cityRevealed || gameState.cityGuesses >= 5) && (
+            <div className={`${styles.stat}${!gameState.cityGuessed ? ` ${styles.statNotFound}` : ''}`}>
+              <span className={styles.statLabel}>Status:</span>
+              <span className={gameState.cityGuessed ? styles.statValueSuccess : styles.statValueSmall}>
+                {gameState.cityGuessed ? '✓ City found' : '✗ City not found'}
+              </span>
             </div>
           )}
         </div>
 
-        {roundToShow === 'landmark' && !(gameState.gameComplete && viewIndex === 2) && (
+        {roundToShow === 'landmark' && !(gameState.gameComplete && effectiveViewIndex === 2) && (
           <>
             {(!gameState.landmarkGuessed && gameState.landmarkGuesses < 5 && !gameState.landmarkRevealed && !gameState.gameComplete) ? (
               <LandmarkNameQuestion
@@ -343,7 +388,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
               gameState.landmarkGuesses >= 5 ||
               gameState.landmarkRevealed) && (
               <div className={styles.nextRoundContainer}>
-                {gameState.gameComplete && viewIndex < 2 && (
+                {gameState.gameComplete && effectiveViewIndex < 2 && (
                   <button
                     type="button"
                     className={styles.nextRoundButton}
@@ -366,7 +411,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
           </>
         )}
 
-        {roundToShow === 'country' && !(gameState.gameComplete && viewIndex === 2) && (
+        {roundToShow === 'country' && !(gameState.gameComplete && effectiveViewIndex === 2) && (
           <>
             {!gameState.countryGuessed &&
             !gameState.countryRevealed &&
@@ -420,9 +465,9 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
           <GuessHistory guesses={gameState.guesses} correctCountry={landmark.country} />
         )}
 
-        {roundToShow === 'country' && !(gameState.gameComplete && viewIndex === 2) && (
+        {roundToShow === 'country' && !(gameState.gameComplete && effectiveViewIndex === 2) && (
           <div className={styles.nextRoundContainer}>
-            {viewIndex > 0 && (
+            {effectiveViewIndex > 0 && (
               <button
                 type="button"
                 className={styles.nextRoundButton}
@@ -443,7 +488,7 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
           </div>
         )}
 
-        {roundToShow === 'city' && !(gameState.gameComplete && viewIndex === 2) && (
+        {roundToShow === 'city' && !(gameState.gameComplete && effectiveViewIndex === 2) && (
           <>
             <CityQuestion
               landmark={landmark}
@@ -482,9 +527,9 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
           </>
         )}
 
-        {!gameState.gameComplete && gameState.currentRound !== 'landmark' && (
+        {roundToShow === 'city' && !(gameState.gameComplete && effectiveViewIndex === 2) && (
           <div className={styles.nextRoundContainer}>
-            {viewIndex > 0 && (
+            {effectiveViewIndex > 0 && (
               <button
                 type="button"
                 className={styles.nextRoundButton}
@@ -493,23 +538,20 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
                 ← View last round
               </button>
             )}
-            {(
-              (gameState.currentRound === 'country' && (backSteps > 0 || countryFinished)) ||
-              (gameState.currentRound === 'city' && backSteps > 0)
-            ) && (
+            {gameState.currentRound === 'city' && backSteps > 0 && (
               <button
                 type="button"
                 className={styles.nextRoundButton}
                 onClick={handleNextRoundClick}
               >
-                Next round
+                Next round →
               </button>
             )}
           </div>
         )}
 
 
-        {gameState.gameComplete && viewIndex === 2 && (
+        {gameState.gameComplete && effectiveViewIndex === 2 && (
           <div className={styles.completionMessage}>
             <h2 className={styles.completionTitle}>Game complete.</h2>
             <p className={styles.completionText}>
@@ -536,11 +578,13 @@ export default function GameBoard({ landmark, gameState, setGameState }: GameBoa
                 Share results
               </button>
               {shareCopied && (
-                <div className={styles.shareCopied}>Copied to clipboard – paste into a text to share.</div>
+                <div className={styles.shareCopied}>
+                  {shareMethod === 'native' ? 'Shared!' : 'Copied to clipboard – paste into a text to share.'}
+                </div>
               )}
             </div>
             <div className={styles.nextRoundContainer}>
-              {viewIndex > 0 && (
+              {effectiveViewIndex > 0 && (
                 <button
                   type="button"
                   className={styles.nextRoundButton}
