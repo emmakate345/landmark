@@ -159,7 +159,7 @@
 }
 
 .countryCard {
-  padding: 25px 0;
+  padding: 25px 24px;
   width: 100%;
   box-sizing: border-box;
   background: linear-gradient(135deg, #7eb8a3 0%, #6ba3b8 100%);
@@ -250,6 +250,10 @@
 }
 
 @media (max-width: 768px) {
+  .countryCard {
+    padding: 25px 28px;
+  }
+
   .stats {
     flex-direction: column;
   }

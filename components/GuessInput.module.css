@@ -79,9 +79,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40%;
-  min-width: 144px;
-  max-width: 240px;
+  width: 90%;
+  min-width: 216px;
+  max-width: 360px;
   background: #f5f5f5;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
@@ -113,9 +113,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40%;
-  min-width: 144px;
-  max-width: 240px;
+  width: 90%;
+  min-width: 216px;
+  max-width: 360px;
   background: #f5f5f5;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
@@ -145,8 +145,8 @@
 
   .button,
   .revealButton {
-    width: 40%;
-    min-width: 144px;
-    max-width: 240px;
+    width: 90%;
+    min-width: 216px;
+    max-width: 360px;
   }
 }
