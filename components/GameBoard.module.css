@@ -1,0 +1,248 @@
+.gameBoard {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.landmarkSection {
+  width: 100%;
+}
+
+.gameInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 25px;
+  background: #e8f5e9;
+  border-radius: 10px;
+  min-width: 120px;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.statValueSuccess {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.hintDisplay {
+  padding: 15px;
+  background: #fff3e0;
+  border: 2px solid #e07a5f;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.hintText {
+  font-size: 1.1rem;
+  color: #bf5a3c;
+}
+
+.completionMessage {
+  padding: 30px;
+  background: linear-gradient(135deg, #81c784 0%, #4db6ac 100%);
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+}
+
+.completionTitle {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.completionText {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.completionStats {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.shareActions {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.shareButton {
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1565c0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+}
+
+.shareButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+}
+
+.shareCopied {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.landmarkResult {
+  padding: 16px 20px;
+  margin-top: 4px;
+  background: #e3f2fd;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.landmarkResultTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1565c0;
+  margin-bottom: 4px;
+}
+
+.landmarkResultName {
+  font-size: 1.2rem;
+  color: #0d47a1;
+}
+
+.countryCard {
+  padding: 25px 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #80cbc4 0%, #4db6ac 100%);
+  border-radius: 15px;
+  color: white;
+}
+
+.countryTitle {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.countryText {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  opacity: 0.95;
+  text-align: center;
+}
+
+.landmarkGuessHistory {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.landmarkGuessItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.landmarkGuessIconIncorrect {
+  color: #c62828;
+}
+
+.landmarkGuessIconCorrect {
+  color: #2e7d32;
+}
+
+.nextRoundContainer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.nextRoundButton {
+  padding: 12px 28px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #a5d6a7 0%, #81c784 50%, #66bb6a 100%);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(76, 175, 80, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+
+.nextRoundButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(76, 175, 80, 0.45);
+  background: linear-gradient(135deg, #b2dfdb 0%, #80cbc4 50%, #4db6ac 100%);
+}
+
+.landmarkResult {
+  padding: 16px 20px;
+  margin-top: 4px;
+  background: #e3f2fd;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.landmarkResultTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1565c0;
+  margin-bottom: 4px;
+}
+
+.landmarkResultName {
+  font-size: 1.2rem;
+  color: #0d47a1;
+}
+
+@media (max-width: 768px) {
+  .stats {
+    flex-direction: column;
+  }
+
+  .stat {
+    width: 100%;
+  }
+
+  .completionTitle {
+    font-size: 1.5rem;
+  }
+
+  .completionText {
+    font-size: 1rem;
+  }
+}

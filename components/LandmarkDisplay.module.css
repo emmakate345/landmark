@@ -1,0 +1,38 @@
+.container {
+  text-align: center;
+}
+
+.name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.imageContainer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(126, 184, 163, 0.3);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.description {
+  font-size: 1rem;
+  color: #666;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .name {
+    font-size: 2rem;
+  }
+}

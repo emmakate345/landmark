@@ -1,0 +1,51 @@
+.container {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.guessList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.guessItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.guessIconIncorrect {
+  color: #c62828;
+}
+
+.guessIconCorrect {
+  color: #2e7d32;
+}
+
+.guessList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.guessList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.guessList::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.guessList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

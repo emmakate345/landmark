@@ -1,0 +1,43 @@
+.container {
+  width: 100%;
+}
+
+.bonusCard {
+  padding: 25px 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #80cbc4 0%, #4db6ac 100%);
+  border-radius: 15px;
+  color: white;
+  text-align: center;
+  overflow: visible;
+}
+
+.bonusTitle {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.bonusText {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.landmarkFeedback {
+  margin-top: 16px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .bonusTitle {
+    font-size: 1.5rem;
+  }
+
+  .bonusText {
+    font-size: 1rem;
+  }
+}

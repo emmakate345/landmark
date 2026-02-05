@@ -1,0 +1,135 @@
+.container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.inputWrapper {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.suggestionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  padding: 8px 0;
+  background: white;
+  border: 2px solid #7eb8a3;
+  border-radius: 10px;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(126, 184, 163, 0.2);
+  z-index: 100;
+}
+
+.suggestionItem {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+  transition: background 0.15s;
+}
+
+.suggestionItem:hover,
+.suggestionItem.highlighted {
+  background: #e8f5e9;
+}
+
+.input {
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  text-align: center;
+  width: 190px; /* roughly match Guess/Reveal button width on desktop */
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: #7eb8a3;
+  box-shadow: 0 0 0 3px rgba(126, 184, 163, 0.2);
+}
+
+.input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.button {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #88c9b8 0%, #6bb5c4 50%, #7ba8d4 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(107, 181, 196, 0.25);
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 181, 196, 0.35);
+  background: linear-gradient(135deg, #95d4c4 0%, #7bc5d4 50%, #8bb8e4 100%);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.revealButton {
+  padding: 15px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #5a4a3a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.revealButton:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+   .inputWrapper {
+     width: 100%;
+   }
+
+   .input {
+     width: 100%;
+   }
+
+  .button,
+  .revealButton {
+    width: 100%;
+  }
+}
