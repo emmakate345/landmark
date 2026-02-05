@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   width: 100%;
   max-width: 640px;
@@ -8,7 +9,7 @@
 }
 
 .inputWrapper {
-  flex: 0 0 auto;
+  width: 100%;
   position: relative;
 }
 
@@ -46,7 +47,7 @@
   padding: 15px 20px;
   font-size: 1.1rem;
   text-align: center;
-  width: 190px; /* roughly match Guess/Reveal button width on desktop */
+  width: 100%;
   border: 2px solid #e5e7eb;
   border-radius: 10px;
   outline: none;
@@ -71,6 +72,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   background: linear-gradient(135deg, #88c9b8 0%, #6bb5c4 50%, #7ba8d4 100%);
   border: none;
   border-radius: 12px;
@@ -102,6 +104,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   background: rgba(255, 255, 255, 0.9);
   border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 12px;
